@@ -17,6 +17,11 @@ export default {
         hostname: "fakestoreapi.com",
         pathname: "/img/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
     ],
   },
 };
