@@ -50,6 +50,7 @@ export async function Banner() {
   ].filter((s) => s.src);
 
   if (!slides.length) {
+    // Fallback: hanya promo slides (kalau pakai placeholder yang diizinkan)
     const fallback = PROMO_SLIDES;
     return <BannerCarousel slides={fallback} />;
   }
