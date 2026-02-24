@@ -28,11 +28,31 @@ function slugFromCategory(category: string): string {
 function categoryFromSlug(slug: string): string {
   const map: Record<string, string> = {
     electronics: "electronics",
+    gaming: "gaming", // virtual category
     jewelery: "jewelery",
     "mens-clothing": "men's clothing",
     "women-clothing": "women's clothing",
   };
   return map[slug] ?? slug;
+}
+
+/** Kata kunci untuk kategori virtual "Gaming" (elektronik + perangkat gaming). */
+const GAMING_KEYWORDS = [
+  "gaming",
+  "monitor",
+  "mouse",
+  "keyboard",
+  "laptop",
+  "led",
+  "ssd",
+  "portable",
+  "headphones",
+  "in-ear",
+];
+
+function isGamingProduct(title: string): boolean {
+  const lower = title.toLowerCase();
+  return GAMING_KEYWORDS.some((k) => lower.includes(k));
 }
 
 function mapToProduct(p: FakeStoreProduct): Product {
@@ -86,14 +106,14 @@ async function fetchCategories(): Promise<string[]> {
   return res.json();
 }
 
-/** Semua produk (untuk getProducts, search). */
+/** Semua produk (hanya elektronik & gaming, untuk getProducts / search). */
 export async function getFakeStoreProducts(opts?: {
   query?: string;
   sortKey?: string;
   reverse?: boolean;
 }): Promise<Product[]> {
   const raw = await fetchProducts();
-  let list = raw.map(mapToProduct);
+  let list = raw.map(mapToProduct).filter((p) => p.tags.includes("electronics"));
 
   if (opts?.query) {
     const q = opts.query.toLowerCase();
@@ -123,7 +143,7 @@ export async function getFakeStoreProducts(opts?: {
   return list;
 }
 
-/** Satu produk by handle (id). */
+/** Satu produk by handle (id). Hanya tampilkan elektronik. */
 export async function getFakeStoreProduct(
   handle: string
 ): Promise<Product | undefined> {
@@ -132,29 +152,37 @@ export async function getFakeStoreProduct(
   const res = await fetch(`${BASE}/products/${id}`);
   if (!res.ok) return undefined;
   const raw: FakeStoreProduct = await res.json();
+  if (raw.category !== "electronics") return undefined;
   return mapToProduct(raw);
 }
 
-/** Koleksi (kategori) untuk daftar di search. Yang handle-nya diawali "hidden" tidak ikut (untuk UI). */
+/** Koleksi: fokus Elektronik & Gaming (tanpa clothing). */
 export async function getFakeStoreCollections(): Promise<Collection[]> {
-  const categories = await fetchCategories();
   const all: Collection = {
     handle: "",
     title: "All",
-    description: "All products",
-    seo: { title: "All", description: "All products" },
+    description: "Electronics & gaming products",
+    seo: { title: "All", description: "Electronics & gaming" },
     path: "/search",
     updatedAt: new Date().toISOString(),
   };
-  const byCategory: Collection[] = categories.map((cat) => ({
-    handle: slugFromCategory(cat),
-    title: cat,
-    description: `${cat} products`,
-    seo: { title: cat, description: `${cat} products` },
-    path: `/search/${slugFromCategory(cat)}`,
+  const electronics: Collection = {
+    handle: "electronics",
+    title: "Electronics",
+    description: "Laptops, monitors, storage & more",
+    seo: { title: "Electronics", description: "Electronics products" },
+    path: "/search/electronics",
     updatedAt: new Date().toISOString(),
-  }));
-  return [all, ...byCategory].filter((c) => !c.handle.startsWith("hidden"));
+  };
+  const gaming: Collection = {
+    handle: "gaming",
+    title: "Gaming & Tech",
+    description: "Gaming monitors, peripherals & devices",
+    seo: { title: "Gaming & Tech", description: "Gaming and tech products" },
+    path: "/search/gaming",
+    updatedAt: new Date().toISOString(),
+  };
+  return [all, electronics, gaming].filter((c) => !c.handle.startsWith("hidden"));
 }
 
 /** Satu koleksi by handle (slug kategori). */
@@ -165,22 +193,36 @@ export async function getFakeStoreCollection(
   return collections.find((c) => c.handle === handle);
 }
 
-/** Produk dalam satu koleksi. Handle khusus: hidden-homepage-* untuk homepage. */
+/** Hanya produk elektronik (untuk homepage & koleksi electronics). */
+function onlyElectronics(products: Product[]): Product[] {
+  return products.filter((p) => p.tags.includes("electronics"));
+}
+
+/** Produk dalam satu koleksi. Homepage & koleksi fokus elektronik/gaming. */
 export async function getFakeStoreCollectionProducts(opts: {
   collection: string;
   sortKey?: string;
   reverse?: boolean;
 }): Promise<Product[]> {
   const all = await getFakeStoreProducts({ sortKey: opts.sortKey, reverse: opts.reverse });
+  const electronicsOnly = onlyElectronics(all);
 
   if (opts.collection === "hidden-homepage-carousel") {
-    return all.slice(0, 5);
+    return electronicsOnly.slice(0, 5);
   }
   if (opts.collection === "hidden-homepage-featured-items") {
-    return all.slice(0, 3);
+    return electronicsOnly.slice(0, 3);
   }
 
-  const category = categoryFromSlug(opts.collection);
+  const slug = opts.collection;
+  if (slug === "electronics") {
+    return electronicsOnly;
+  }
+  if (slug === "gaming") {
+    return electronicsOnly.filter((p) => isGamingProduct(p.title));
+  }
+
+  const category = categoryFromSlug(slug);
   return all.filter((p) => p.tags.includes(category));
 }
 

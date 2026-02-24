@@ -19,12 +19,24 @@ const PROMO_SLIDES: BannerSlide[] = [
   },
 ];
 
+/** Hanya produk elektronik / gaming untuk banner carousel. */
+function isElectronicsOrGaming(tags: string[]): boolean {
+  const lower = tags.map((t) => t.toLowerCase());
+  return (
+    lower.includes("electronics") ||
+    lower.some((t) => t.includes("gaming") || t.includes("tech"))
+  );
+}
+
 export async function Banner() {
   const products = await getCollectionProducts({
     collection: "hidden-homepage-carousel",
   });
 
-  const productSlides: BannerSlide[] = (products || []).slice(0, 3).map((p) => ({
+  const electronicsOnly = (products || []).filter((p) =>
+    isElectronicsOrGaming(p.tags ?? [])
+  );
+  const productSlides: BannerSlide[] = electronicsOnly.slice(0, 3).map((p) => ({
     src: p.featuredImage?.url ?? "",
     alt: p.title,
     href: `/product/${p.handle}`,
