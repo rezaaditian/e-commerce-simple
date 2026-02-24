@@ -1,7 +1,6 @@
 import { getCollectionProducts } from "lib/shopify";
 import { BannerCarousel, type BannerSlide } from "components/banner-carousel";
 
-// Dummy promo slides (gambar promo – ganti URL dengan aset nyata nanti)
 const PROMO_SLIDES: BannerSlide[] = [
   {
     src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=400&fit=crop",
@@ -19,7 +18,6 @@ const PROMO_SLIDES: BannerSlide[] = [
   },
 ];
 
-/** Hanya produk elektronik / gaming untuk banner carousel. */
 function isElectronicsOrGaming(tags: string[]): boolean {
   const lower = tags.map((t) => t.toLowerCase());
   return (
@@ -46,14 +44,12 @@ export async function Banner() {
       : undefined,
   }));
 
-  // Gabung promo di depan, lalu product slides (filter yang punya src)
   const slides: BannerSlide[] = [
     ...PROMO_SLIDES,
     ...productSlides.filter((s) => s.src),
   ].filter((s) => s.src);
 
   if (!slides.length) {
-    // Fallback: hanya promo slides (kalau pakai placeholder yang diizinkan)
     const fallback = PROMO_SLIDES;
     return <BannerCarousel slides={fallback} />;
   }
