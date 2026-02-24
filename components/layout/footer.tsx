@@ -5,7 +5,6 @@ import LogoSquare from "components/logo-square";
 const { SITE_NAME } = process.env;
 const currentYear = new Date().getFullYear();
 
-// Dummy data – ganti dengan data nyata atau CMS nanti
 const footerLinks = {
   shop: [
     { label: "All Products", href: "/search" },
