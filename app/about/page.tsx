@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Footer from "components/layout/footer";
 
 const { SITE_NAME } = process.env;
 const siteName = SITE_NAME || "Store";
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
+    <>
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="mb-8 text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
         About Us
@@ -25,18 +27,14 @@ export default function AboutPage() {
           Our Story
         </h2>
         <p className="leading-relaxed">
-          Founded with a simple idea: everyone deserves access to reliable tech
-          and great gaming equipment. We source products we trust and stand
-          behind what we sell.
+          We started with one clear mission: build a place where quality tech is easy to find and safe to buy. No confusing specs, no overpriced gear, no empty promises. Just carefully selected products that meet real performance standards and deliver real value.
         </p>
 
         <h2 className="mt-10 text-xl font-semibold text-neutral-900 dark:text-white">
           What We Offer
         </h2>
         <p className="leading-relaxed">
-          From laptops and monitors to peripherals and accessories, we focus on
-          electronics and gaming so you can work, play, and create without
-          compromise.
+          We provide curated electronics and gaming gear designed for productivity and performance. From high-performance laptops and crisp monitors to precision peripherals and essential accessories, every product is chosen to support serious work, competitive play, and creative output.
         </p>
 
         <h2 className="mt-10 text-xl font-semibold text-neutral-900 dark:text-white">
@@ -54,5 +52,7 @@ export default function AboutPage() {
         </p>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
