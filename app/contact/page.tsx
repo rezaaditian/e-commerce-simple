@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Footer from "components/layout/footer";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
+    <>
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="mb-2 text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
         Contact Us
@@ -99,5 +101,7 @@ export default function ContactPage() {
         </button>
       </form>
     </div>
+    <Footer />
+    </>
   );
 }
