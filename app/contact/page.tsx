@@ -58,7 +58,7 @@ export default function ContactPage() {
           <input
             id="contact-phone"
             type="tel"
-            placeholder="+1 234 567 8900"
+            placeholder="+62 234 567 0595"
             className="w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-500"
           />
         </div>
