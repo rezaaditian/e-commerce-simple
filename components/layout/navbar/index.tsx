@@ -59,7 +59,7 @@ export async function Navbar() {
         </div>
         <div className="flex items-center justify-end gap-2 md:w-1/3">
           <CartModal />
-          {/* <Link
+          <Link
             href="/login"
             className="hidden rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700 sm:inline-block"
           >
@@ -70,7 +70,7 @@ export async function Navbar() {
             className="hidden rounded-md bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 sm:inline-block"
           >
             Register
-          </Link> */}
+          </Link>
         </div>
       </div>
     </nav>
