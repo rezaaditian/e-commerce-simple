@@ -41,7 +41,7 @@ export default function LoginPage() {
           <input
             id="login-password"
             type="password"
-            placeholder="••••••••"
+            placeholder="*****"
             className={inputClass}
           />
         </div>
